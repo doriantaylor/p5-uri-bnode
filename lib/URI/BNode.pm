@@ -11,6 +11,8 @@ use Data::UUID::NCName ();
 
 # lolol
 
+# XXX i've been advised to switch this to Data::GUID::Any
+
 BEGIN {
     eval { require Data::UUID::MT };
     if ($@) {
