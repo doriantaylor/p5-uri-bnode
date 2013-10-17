@@ -1,61 +1,74 @@
-URI-BNode
+NAME
+    URI::BNode - RDF blank node identifiers which are also URI objects
 
-The README is used to introduce the module and provide instructions on
-how to install the module, any machine dependencies it may have (for
-example C compilers and installed libraries) and any other information
-that should be provided before the module is installed.
+VERSION
+    Version 0.01
 
-A README file is required for CPAN modules since CPAN extracts the README
-file from a module distribution so that people browsing the archive
-can use it to get an idea of the module's uses. It is usually a good idea
-to provide version information here so that people can decide whether
-fixes for the module are worth downloading.
+SYNOPSIS
+        my $bnode = URI::BNode->new;
 
+        print "$bnode\n"; # something like _:EH_kW827XQ6vvX0yF8YzRA
 
-INSTALLATION
+METHODS
+  new [$ID]
+    Creates a new blank node identifier. If $ID is undefined or empty, one
+    will be generated using Data::UUID::NCName. If $ID has a value, it must
+    either begin with "_:" or conform to the blank node syntax from the
+    Turtle spec. Other values, including other URIs, will be passed to the
+    URI constructor.
 
-To install this module, run the following commands:
+  opaque [$NEWVAL]
+    Replace the blank node's value with a new one. This method will croak if
+    passed a $NEWVAL which doesn't match the spec in
+    <http://www.w3.org/TR/turtle/#BNodes>.
 
-	perl Makefile.PL
-	make
-	make test
-	make install
+AUTHOR
+    Dorian Taylor, "<dorian at cpan.org>"
 
-SUPPORT AND DOCUMENTATION
+BUGS
+    Please report any bugs or feature requests to "bug-uri-bnode at
+    rt.cpan.org", or through the web interface at
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=URI-BNode>. I will be
+    notified, and then you'll automatically be notified of progress on your
+    bug as I make changes.
 
-After installing, you can find documentation for this module with the
-perldoc command.
+SUPPORT
+    You can find documentation for this module with the perldoc command.
 
-    perldoc URI::BNode
+        perldoc URI::BNode
 
-You can also look for information at:
+    You can also look for information at:
 
-    RT, CPAN's request tracker (report bugs here)
-        http://rt.cpan.org/NoAuth/Bugs.html?Dist=URI-BNode
+    *   RT: CPAN's request tracker (report bugs here)
 
-    AnnoCPAN, Annotated CPAN documentation
-        http://annocpan.org/dist/URI-BNode
+        <http://rt.cpan.org/NoAuth/Bugs.html?Dist=URI-BNode>
 
-    CPAN Ratings
-        http://cpanratings.perl.org/d/URI-BNode
+    *   AnnoCPAN: Annotated CPAN documentation
 
-    Search CPAN
-        http://search.cpan.org/dist/URI-BNode/
+        <http://annocpan.org/dist/URI-BNode>
 
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/URI-BNode>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/URI-BNode/>
+
+SEE ALSO
+    URI
+    Data::UUID::NCName
 
 LICENSE AND COPYRIGHT
+    Copyright 2013 Dorian Taylor.
 
-Copyright (C) 2013 Dorian Taylor
+    Licensed under the Apache License, Version 2.0 (the "License"); you may
+    not use this file except in compliance with the License. You may obtain
+    a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    L<http://www.apache.org/licenses/LICENSE-2.0>
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 

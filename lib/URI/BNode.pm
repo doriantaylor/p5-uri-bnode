@@ -89,14 +89,17 @@ our $VERSION = '0.01';
 =head2 new [$ID]
 
 Creates a new blank node identifier. If C<$ID> is undefined or empty,
-one will be generated using L<Data::UUID::NCName>.
+one will be generated using L<Data::UUID::NCName>. If C<$ID> has a
+value, it must either begin with C<_:> or conform to the blank node
+syntax from the Turtle spec. Other values, including other URIs, will
+be passed to the L<URI> constructor.
 
 =cut
 
 sub new {
     my $class = shift;
 
-    my $bnode = _validate(@_);
+    my $bnode = _validate(@_) if @_ == 1;
     return URI->new(@_) unless defined $bnode;
 
     bless \$bnode, $class;
