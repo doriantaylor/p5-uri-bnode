@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use URI;
+use Test::More tests => 14;
 
 use_ok('URI::BNode');
 
@@ -47,3 +48,14 @@ isa_ok($bnode2, 'URI::BNode', 'regenerated bnode');
 
 my $bn3 = URI::BNode->new('_:_._');
 isa_ok($bn3, 'URI::BNode', 'ugly but valid');
+
+my $base = URI->new('http://perennial-example.com/');
+
+my $skolem = $bnode2->skolemize($base);
+my $b2name = $bnode2->name;
+
+ok($skolem->path =~ m!/$b2name$!, 'skolem matches');
+
+my $de_sk = URI::BNode->de_skolemize($skolem);
+
+ok("$bnode2" eq "$de_sk", 'skolemization round-trip');
