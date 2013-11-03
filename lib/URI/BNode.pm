@@ -211,7 +211,9 @@ sub de_skolemize {
 
     # this is a static method
     $class = ref $class || $class;
-    $class->new($candidate);
+
+    # no need to invoke the constructor, candidate is already valid.
+    bless \$candidate, $class;
 }
 
 =head1 AUTHOR
