@@ -7,51 +7,12 @@ use warnings FATAL => 'all';
 use base qw(URI);
 
 use Carp ();
-#use Data::GUID::Any    ();
+use Data::GUID::Any    ();
 use Data::UUID::NCName ();
 
 # lolol
 
 # XXX i've been advised to switch this to Data::GUID::Any
-
-BEGIN {
-    eval { require Data::UUID::MT };
-    if ($@) {
-        undef $@;
-        eval { require OSSP::uuid };
-        if ($@) {
-            undef $@;
-            eval { require Data::UUID::LibUUID };
-            if ($@) {
-                undef $@;
-                eval { require UUID::Tiny };
-                if ($@) {
-                    die 'Failed to load Data::UUID::MT, OSSP::uuid, ' .
-                        'Data::UUID::LibUUID or UUID::Tiny.';
-                }
-                else {
-                    *_uuid = sub () {
-                        UUID::Tiny::create_uuid_as_string(&UUID::Tiny::UUID_V4)
-                      };
-                }
-            }
-            else {
-                *_uuid = sub () { Data::UUID::LibUUID::new_uuid_string(4) };
-            }
-        }
-        else {
-            *_uuid = sub () {
-                my $u = OSSP::uuid->new;
-                $u->make('v4');
-                $u->export('str');
-            };
-        }
-    }
-    else {
-        our $UUIDGEN = Data::UUID::MT->new;
-        *_uuid = sub () { $UUIDGEN->create_string };
-    }
-}
 
 my $PN_CHARS_BASE = qr/[A-Za-z\x{00C0}-\x{00D6}}\x{00D8}-\x{00F6}
                            \x{00F8}-\x{02FF}\x{0370}-\x{037D}
@@ -68,6 +29,9 @@ my $BNODE = qr/^\s*(_:)?((?:$PN_CHARS_BASE|[_0-9])
                            \x{0300}-\x{036F}\x{203F}-\x{2040}-]+)?)
                \s*$/osmx;
 
+sub _uuid () {
+    lc Data::GUID::Any::v4_guid_as_string();
+}
 
 =head1 NAME
 
