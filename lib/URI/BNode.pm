@@ -7,6 +7,7 @@ use warnings FATAL => 'all';
 use base qw(URI);
 
 use Carp ();
+#use Data::GUID::Any    ();
 use Data::UUID::NCName ();
 
 # lolol
@@ -52,19 +53,19 @@ BEGIN {
     }
 }
 
-my $PN_CHARS_BASE = qr/[A-Za-z\N{U+00C0}-\N{U+00D6}}\N{U+00D8}-\N{U+00F6}
-                           \N{U+00F8}-\N{U+02FF}\N{U+0370}-\N{U+037D}
-                           \N{U+037F}-\N{U+1FFF}\N{U+200C}-\N{U+200D}
-                           \N{U+2070}-\N{U+218F}\N{U+2C00}-\N{U+2FEF}
-                           \N{U+3001}-\N{U+D7FF}\N{U+F900}-\N{U+FDCF}
-                           \N{U+FDF0}-\N{U+FFFD}\N{U+10000}-\N{U+EFFFF}]+/x;
+my $PN_CHARS_BASE = qr/[A-Za-z\x{00C0}-\x{00D6}}\x{00D8}-\x{00F6}
+                           \x{00F8}-\x{02FF}\x{0370}-\x{037D}
+                           \x{037F}-\x{1FFF}\x{200C}-\x{200D}
+                           \x{2070}-\x{218F}\x{2C00}-\x{2FEF}
+                           \x{3001}-\x{D7FF}\x{F900}-\x{FDCF}
+                           \x{FDF0}-\x{FFFD}\x{10000}-\x{EFFFF}]+/x;
 
 # from the turtle spec: http://www.w3.org/TR/turtle/#BNodes
 my $BNODE = qr/^\s*(_:)?((?:$PN_CHARS_BASE|[_0-9])
-                   (?:$PN_CHARS_BASE|[._0-9\N{U+00B7}
-                           \N{U+0300}-\N{U+036F}\N{U+203F}-\N{U+2040}-]+)?
-                   (?:$PN_CHARS_BASE|[_0-9\N{U+00B7}
-                           \N{U+0300}-\N{U+036F}\N{U+203F}-\N{U+2040}-]+)?)
+                   (?:$PN_CHARS_BASE|[._0-9\x{00B7}
+                           \x{0300}-\x{036F}\x{203F}-\x{2040}-]+)?
+                   (?:$PN_CHARS_BASE|[_0-9\x{00B7}
+                           \x{0300}-\x{036F}\x{203F}-\x{2040}-]+)?)
                \s*$/osmx;
 
 
@@ -101,7 +102,7 @@ be passed to the L<URI> constructor.
 sub new {
     my $class = shift;
 
-    my $bnode = _validate(@_) if @_ == 1;
+    my $bnode = _validate(@_);
     return URI->new(@_) unless defined $bnode;
 
     bless \$bnode, $class;
@@ -123,6 +124,10 @@ sub _validate {
     "_:$val";
 }
 
+=head2 name [$NEWVAL]
+
+Alias for L</opaque>.
+
 =head2 opaque [$NEWVAL]
 
 Replace the blank node's value with a new one. This method will croak
@@ -134,13 +139,15 @@ L<http://www.w3.org/TR/turtle/#BNodes>.
 sub opaque {
     my $self = shift;
     if (@_) {
-        my $val = _validate(@_);
-        Carp::croak("Blank node identifier doesn't match Turtle spec");
+        my $val = _validate(@_) or
+            Carp::croak("Blank node identifier doesn't match Turtle spec");
         $$self = $val;
     }
 
     (split(/:/, $$self, 2))[1];
 }
+
+*name = \&opaque;
 
 # dirty little scheme function
 sub _scheme {
