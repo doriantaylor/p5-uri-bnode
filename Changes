@@ -1,7 +1,7 @@
 Revision history for URI-BNode
 
 0.06    2013-11-03
-        (Still) trying to get CPANTS to stop complaining   
+        Adding prereq of 0.04 to Data::GUID::Any
 
 0.05    2013-11-03
         Adding docs
